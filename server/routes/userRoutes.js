@@ -54,4 +54,28 @@ module.exports = (app) => {
       res.status(500).json({ message: error.message });
     }
     });
+     // Update User Info
+  app.put("/api/v1/update/user/:id", async (req, res) => {
+    const { id } = req.params;
+    const { name, phone } = req.body;
+    try {
+      const response = await User.updateOne({ _id: id }, { name, phone });
+      res.status(200).json({ message: "User updated successfully", response });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Delete User
+  app.delete("/api/v1/delete/user/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const response = await User.findByIdAndDelete(id);
+      res.status(200).json({ message: "User deleted successfully", response });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  });
 };

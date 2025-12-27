@@ -36,4 +36,35 @@ module.exports = (app) => {
       res.status(500).json({ message: error.message });
     }
     });
+     app.get("/api/v1/get/movie/:id", async (req, res) => {
+    const { id } = req.params;
+    const response = await Movie.findById(id);
+    res.status(200).json({ message: "Movie fetched successfully", response });
+  });
+
+
+  // Update Movie Info
+  app.put("/api/v1/update/movie/:id", async (req, res) => {
+    const { id } = req.params;
+    const { name, phone } = req.body;
+    try {
+      const response = await Movie.updateOne({ _id: id }, { name, phone });
+      res.status(200).json({ message: "Movie updated successfully", response });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Delete Movie
+  app.delete("/api/v1/delete/movie/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const response = await Movie.findByIdAndDelete(id);
+      res.status(200).json({ message: "Movie deleted successfully", response });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: error.message });
+    }
+  });
 };
