@@ -4,6 +4,7 @@ const { Schema } = mongoose;
 const seriesSchema = new Schema({
   title: String,
   genre: [String],
+  cast: [String],
   language: String,
   tags: [String],
   release_date: Date,
