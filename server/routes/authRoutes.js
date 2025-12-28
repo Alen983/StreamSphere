@@ -23,49 +23,86 @@ module.exports = (app) => {
       //   Check if user already exists
       const user = await User.findOne({ email });
 
-      //   If user does not exist, then create a new one
-      if (!user) {
-        const response = await User.create({ email, otp: newOTP });
-        res.status(201).json({ message: "OTP Sent Successfully", response });
-      } else {
-        const response = await User.updateOne({ email }, { otp: newOTP });
-        res.status(201).json({ message: "OTP Sent Successfully", response });
-      }
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
-    }
+    //   //   If user does not exist, then create a new one
+    //   if (!user) {
+    //     const response = await User.create({ email, otp: newOTP });
+    //     res.status(201).json({ message: "OTP Sent Successfully", response });
+    //   } else {
+    //     const response = await User.updateOne({ email }, { otp: newOTP });
+    //     res.status(201).json({ message: "OTP Sent Successfully", response });
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   res.status(500).send({ message: error.message });
+
+      res.status(200).json({ message: "OTP Sent Successfully" });
+      } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+    // }
   });
 
   // Verify OTP & Login
   app.post("/api/v1/verify/otp/email", async (req, res) => {
-    console.log("Verify OTP 1");
-    try {
+
+    try{
       const { email, otp } = req.body;
-      console.log("Verify OTP 2", email, otp);
+      let user = await User.findOne({ email });
 
-      const user = await User.findOne({ email });
-      console.log("Verify OTP 3", user);
-
-      if (user && user.otp === otp) {
-        const payload = {
-          id: user._id,
-          email: user.email,
-        };
-        console.log("Verify OTP 4");
-
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPIRES_IN,
-        });
-        console.log("Verify OTP 5");
-
-        res.status(200).json({ message: "Login Success", token });
-        console.log("Verify OTP 6");
+      if (user){
+        if (user.otp === otp){
+          return res.status(200).json({ message: "Invalid OTP" });
       }
-    } catch (error) {
-      console.log(error);
-      res.status(500).send({ message: error.message });
     }
+
+    if (!user){
+      user = await User.create({ email, otp });
+    }
+
+    await User.updateOne({ email }, { $unset: { otp: "" } });
+
+    const payload = {
+      id: user._id,
+      email: user.email,
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+
+    res.status(200).json({ message: "Login Success", token });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+
+//old code
+    // console.log("Verify OTP 1");
+    // try {
+    //   const { email, otp } = req.body;
+    //   console.log("Verify OTP 2", email, otp);
+
+    //   const user = await User.findOne({ email });
+    //   console.log("Verify OTP 3", user);
+
+    //   if (user && user.otp === otp) {
+    //     const payload = {
+    //       id: user._id,
+    //       email: user.email,
+    //     };
+    //     console.log("Verify OTP 4");
+
+    //     const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    //       expiresIn: process.env.JWT_EXPIRES_IN,
+    //     });
+    //     console.log("Verify OTP 5");
+
+    //     res.status(200).json({ message: "Login Success", token });
+    //     console.log("Verify OTP 6");
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   res.status(500).send({ message: error.message });
+    // }
   });
 
   // Get Current User
