@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const User = mongoose.model("users");
 const jwt = require("jsonwebtoken"); // npm i jsonwebtoken
-
+const sendEmail = require("../utils/sendEmail");
 const requireLogin = require("../middleware/requireMail");
 
 const otpLength = 6;
@@ -34,7 +34,8 @@ module.exports = (app) => {
     // } catch (error) {
     //   console.log(error);
     //   res.status(500).send({ message: error.message });
-
+      
+      await sendEmail(email, newOTP);
       res.status(200).json({ message: "OTP Sent Successfully" });
       } catch (error) {
     res.status(500).json({ message: error.message });
