@@ -46,7 +46,7 @@ module.exports = (app) => {
   // Verify OTP & Login
   app.post("/api/v1/verify/otp/email", async (req, res) => {
 
-    try{
+    try{  
       const { email, otp } = req.body;
       let user = await User.findOne({ email });
 
