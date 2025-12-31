@@ -1,9 +1,13 @@
 // src/components/Hero.js
+import { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import Button from "@/components/common/Button";
+import LoginModal from "@/components/auth/LoginModal";
 
 export default function Hero() {
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+
   return (
     <Box
       sx={{
@@ -61,10 +65,16 @@ export default function Hero() {
         </Typography>
 
         {/* CTA Button */}
-        <Button variant="primary" size="medium" borderRadius="30px">
+        <Button 
+          variant="primary" 
+          size="medium" 
+          borderRadius="30px"
+          onClick={() => setLoginModalOpen(true)}
+        >
           Start Streaming
         </Button>
       </Box>
+      <LoginModal open={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
     </Box>
   );
 }
