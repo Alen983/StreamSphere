@@ -157,34 +157,7 @@ export default function LoginForm({ onOTPSent, setError, setMessage, error, mess
           {loading ? 'Signing in...' : 'Sign in'}
         </Button>
 
-        {/* Register Link */}
-        <Typography
-          variant="body2"
-          sx={{
-            textAlign: 'center',
-            color: '#666',
-            mt: 1,
-          }}
-        >
-          Don't have an account?{' '}
-          <Typography
-            component="span"
-            sx={{
-              color: '#d32f2f',
-              cursor: 'pointer',
-              fontWeight: 500,
-              '&:hover': {
-                textDecoration: 'underline',
-              },
-            }}
-            onClick={() => {
-              // You can add registration logic here
-              console.log('Register clicked');
-            }}
-          >
-            Register
-          </Typography>
-        </Typography>
+        
       </Box>
     </form>
   );
