@@ -2,7 +2,6 @@
 
 # dependencies
 node_modules
-uploads
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,7 +10,6 @@ uploads
 !.yarn/releases
 !.yarn/versions
 
-*.mp4
 # testing
 /coverage
 
@@ -41,4 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-

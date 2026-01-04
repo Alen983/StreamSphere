@@ -8,10 +8,6 @@ const nextConfig = {
         source: "/api/:path*",
         destination: "http://localhost:5001/api/:path*", // Added missing /
       },
-      {
-        source: "/api/v1/:path*",
-        destination: "http://localhost:5001/api/v1/:path*",
-      },
     ];
   },
 };

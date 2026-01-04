@@ -1,12 +1,64 @@
 // src/components/Hero.js
-import { useState } from "react";
-import { Box, Typography } from "@mui/material";
-import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import { useState, useEffect } from "react";
+import { Box, Typography, IconButton } from "@mui/material";
+import {
+  ChevronLeft,
+  ChevronRight,
+  PlayArrow,
+  Info,
+} from "@mui/icons-material";
 import Button from "@/components/common/Button";
-import LoginModal from "@/components/auth/LoginModal";
 
-export default function Hero() {
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
+export default function Hero({ slides = [] }) {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Auto-play functionality
+  useEffect(() => {
+    if (!isAutoPlaying || slides.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % slides.length);
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, slides.length]);
+
+  const goToPrevious = () => {
+    setIsAutoPlaying(false);
+    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const goToNext = () => {
+    setIsAutoPlaying(false);
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  const goToSlide = (index) => {
+    setIsAutoPlaying(false);
+    setCurrentIndex(index);
+    setTimeout(() => setIsAutoPlaying(true), 10000);
+  };
+
+  if (slides.length === 0) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#000",
+        }}
+      >
+        <Typography sx={{ color: "#fff" }}>Loading...</Typography>
+      </Box>
+    );
+  }
+
+  const currentSlide = slides[currentIndex];
 
   return (
     <Box
@@ -205,21 +257,31 @@ export default function Hero() {
             gap: 1,
           }}
         >
-          Bringing you movies, shows, and originals from across the globe, all
-          curated to keep you entertained, inspired, and connected.
-        </Typography>
-
-        {/* CTA Button */}
-        <Button 
-          variant="primary" 
-          size="medium" 
-          borderRadius="30px"
-          onClick={() => setLoginModalOpen(true)}
-        >
-          Start Streaming
-        </Button>
-      </Box>
-      <LoginModal open={loginModalOpen} onClose={() => setLoginModalOpen(false)} />
+          {slides.map((_, index) => (
+            <Box
+              key={index}
+              onClick={() => goToSlide(index)}
+              sx={{
+                width: index === currentIndex ? 28 : 8,
+                height: 8,
+                borderRadius: 4,
+                bgcolor:
+                  index === currentIndex
+                    ? "#ffd700"
+                    : "rgba(255, 255, 255, 0.5)",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  bgcolor:
+                    index === currentIndex
+                      ? "#ffd700"
+                      : "rgba(255, 255, 255, 0.8)",
+                },
+              }}
+            />
+          ))}
+        </Box>
+      )}
     </Box>
   );
 }
