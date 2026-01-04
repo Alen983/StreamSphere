@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Head from "next/head";
 import { Box } from "@mui/material";
-import Hero from "@/components/Hero";
+import HeroSlider from "@/components/Hero";
 import MediaRow from "@/components/MediaRow";
 import MediaCard from "@/components/common/MediaCard";
 import Footer from "@/components/Footer";
@@ -15,6 +15,7 @@ export default function Home() {
   const { isAuthenticated } = useSelector((state) => state.auth);
   const { continueWatching } = useSelector((state) => state.watchHistory);
 
+  const [featuredContent, setFeaturedContent] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [topRatedSeries, setTopRatedSeries] = useState([]);
   const [actionMovies, setActionMovies] = useState([]);
@@ -25,6 +26,10 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Fetch featured content for slider
+        const featuredData = await mediaService.getFeaturedContent(5);
+        setFeaturedContent(featuredData.data);
+
         const moviesData = await mediaService.getTopRatedMovies(10);
         setTopRatedMovies(moviesData.data);
 
@@ -51,7 +56,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    // Fetch continue watching if user is authenticated
     if (isAuthenticated) {
       dispatch(getContinueWatching());
     }
@@ -69,7 +73,8 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Hero />
+      {/* Hero Slider */}
+      <HeroSlider slides={featuredContent} />
 
       {/* Main Content - All Sections */}
       <Box
@@ -79,7 +84,7 @@ export default function Home() {
           zIndex: 10,
         }}
       >
-        {/* Continue Watching - Only show if user is authenticated and has items */}
+        {/* Continue Watching */}
         {isAuthenticated && continueWatching.length > 0 && (
           <MediaRow title="Continue Watching">
             {continueWatching.map((item) => (

@@ -1,14 +1,16 @@
-const API_BASE_URL = '/api/v2';
+const API_BASE_URL = "/api/v2";
 
 export const mediaService = {
   // Get Top Rated Movies
   getTopRatedMovies: async (limit = 10) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/top/rated?type=movie&limit=${limit}`);
+      const response = await fetch(
+        `${API_BASE_URL}/top/rated?type=movie&limit=${limit}`
+      );
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching top rated movies:', error);
+      console.error("Error fetching top rated movies:", error);
       throw error;
     }
   },
@@ -16,11 +18,13 @@ export const mediaService = {
   // Get Top Rated Series
   getTopRatedSeries: async (limit = 10) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/top/rated?type=series&limit=${limit}`);
+      const response = await fetch(
+        `${API_BASE_URL}/top/rated?type=series&limit=${limit}`
+      );
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Error fetching top rated series:', error);
+      console.error("Error fetching top rated series:", error);
       throw error;
     }
   },
@@ -40,7 +44,9 @@ export const mediaService = {
   // Get Series by Genre
   getSeriesByGenre: async (genre) => {
     try {
-      const response = await fetch(`${API_BASE_URL}?type=series&genre=${genre}`);
+      const response = await fetch(
+        `${API_BASE_URL}?type=series&genre=${genre}`
+      );
       const data = await response.json();
       return data;
     } catch (error) {
@@ -57,6 +63,20 @@ export const mediaService = {
       return data;
     } catch (error) {
       console.error(`Error fetching ${genre} content:`, error);
+      throw error;
+    }
+  },
+
+  // NEW: Get Featured/Slider Content (top rated with slider posters)
+  getFeaturedContent: async (limit = 5) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/top/rated?limit=${limit}`);
+      const data = await response.json();
+      // Filter items that have sliderPosterUrl
+      const featured = data.data?.filter((item) => item.sliderPosterUrl) || [];
+      return { success: true, data: featured };
+    } catch (error) {
+      console.error("Error fetching featured content:", error);
       throw error;
     }
   },
