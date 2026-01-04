@@ -35,7 +35,7 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
         // Token is already stored from OTP verification, just redirect
         // Wait a moment to show success message, then redirect
         setTimeout(() => {
-          router.push('/onboarding');
+          router.push('/');
           if (onComplete) {
             onComplete();
           }

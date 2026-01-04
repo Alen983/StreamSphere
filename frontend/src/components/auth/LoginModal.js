@@ -29,7 +29,7 @@ export default function LoginModal({ open, onClose }) {
     // Only redirect if already authenticated when modal opens (not during login flow)
     // This prevents redirecting during the OTP verification or onboarding process
     if (isAuthenticated && open && step === 'login') {
-      router.push('/onboarding');
+      router.push('/');
       onClose();
     }
   }, [isAuthenticated, open, router, onClose, step]);
@@ -52,7 +52,7 @@ export default function LoginModal({ open, onClose }) {
     } else {
       // For existing users, redirect (token already stored in OTPForm)
       console.log('Redirecting existing user');
-      router.push('/onboarding');
+      router.push('/');
       onClose();
     }
   };
@@ -68,7 +68,7 @@ export default function LoginModal({ open, onClose }) {
   };
 
   const handleOnboardingComplete = () => {
-    router.push('/onboarding');
+    router.push('/');
     onClose();
   };
 
