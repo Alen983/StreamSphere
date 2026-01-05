@@ -8,7 +8,14 @@ const userSchema = new Schema({
    unique: true },
   phone: { type: String },
   otp: { type: String },
-  subscriptionType: { type: String }
+  subscriptionType: { type: String },
+  preferences: {
+      favoriteGenres: [
+        {
+          type: String,
+          trim: true,
+        },
+      ],}
 });
 
 mongoose.model("users", userSchema);
