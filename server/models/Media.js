@@ -31,9 +31,8 @@ const mediaSchema = new mongoose.Schema({
     trim: true
   }],
   genres: [{
-    type: String,
-    trim: true,
-    index: true
+    type: mongoose.Schema.Types.ObjectId, //dont change
+    ref:'genre',
   }],
   releaseDate: {
     type: Date,
