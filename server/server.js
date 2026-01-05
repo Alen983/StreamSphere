@@ -18,24 +18,25 @@ mongoose
   });
 
 // Models
-require("./models/Movie");
+// require("./models/Movie");
 require("./models/User");
-require("./models/Series")
+// require("./models/Series")
 require("./models/ContinueWatching");
-
+require("./models/Payment");
+require("./models/Media");
 //Middle
 require("./middleware/requireMail")
 
 
 // Routes
-require("./routes/movieRoutes")(app);
+// require("./routes/movieRoutes")(app);
 require("./routes/userRoutes")(app); // To Learn CRUD Oprations
 require("./routes/authRoutes")(app);
-require("./routes/streamRoutes")(app);
+// require("./routes/streamRoutes")(app);
 //require("./routes/seriesRoutes")(app);
 require("./routes/continueWatchingRoutes")(app);
-require("./models/Media");
 
+require("./routes/paymentRoutes")(app);
 // Routes
 require("./routes/mediaRoutes")(app);
 
