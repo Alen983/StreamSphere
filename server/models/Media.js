@@ -72,44 +72,44 @@ const mediaSchema = new mongoose.Schema({
     trim: true
   },
   episodes: [episodeSchema] // embedded subdocuments for series
-}, {
-  timestamps: true,
-  toJSON: { 
-    virtuals: true,
-    transform: function(doc, ret) {
-      // Remove episodes field from movies in API responses
-      if (ret.type === 'movie') {
-        delete ret.episodes;
-      }
-      return ret;
-    }
-  },
-  toObject: { 
-    virtuals: true,
-    transform: function(doc, ret) {
-      // Also remove episodes when converting to object
-      if (ret.type === 'movie') {
-        delete ret.episodes;
-      }
-      return ret;
-    }
-  }
-});
+// }, {
+//   timestamps: true,
+//   toJSON: { 
+//     virtuals: true,
+//     transform: function(doc, ret) {
+//       // Remove episodes field from movies in API responses
+//       if (ret.type === 'movie') {
+//         delete ret.episodes;
+//       }
+//       return ret;
+//     }
+//   },
+//   toObject: { 
+//     virtuals: true,
+//     transform: function(doc, ret) {
+//       // Also remove episodes when converting to object
+//       if (ret.type === 'movie') {
+//         delete ret.episodes;
+//       }
+//       return ret;
+//     }
+//   }
+// });
 
-// Indexes for efficient querying
-mediaSchema.index({ type: 1, genres: 1 });
-mediaSchema.index({ rating: -1 });
-mediaSchema.index({ releaseDate: -1 });
+// // Indexes for efficient querying
+// mediaSchema.index({ type: 1, genres: 1 });
+// mediaSchema.index({ rating: -1 });
+// mediaSchema.index({ releaseDate: -1 });
 
-// Virtual for total episodes (for series)
-mediaSchema.virtual('totalEpisodes').get(function() {
-  return this.episodes.length;
-});
+// // Virtual for total episodes (for series)
+// mediaSchema.virtual('totalEpisodes').get(function() {
+//   return this.episodes.length;
+// });
 
-// Virtual for seasons count (for series)
-mediaSchema.virtual('totalSeasons').get(function() {
-  if (this.episodes.length === 0) return 0;
-  return Math.max(...this.episodes.map(ep => ep.seasonNumber));
+// // Virtual for seasons count (for series)
+// mediaSchema.virtual('totalSeasons').get(function() {
+//   if (this.episodes.length === 0) return 0;
+//   return Math.max(...this.episodes.map(ep => ep.seasonNumber));
 });
 
 // Export models
