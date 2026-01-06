@@ -88,6 +88,7 @@ const mediaSchema = new mongoose.Schema(
     },
     episodes: [episodeSchema], // embedded subdocuments for series
   },
+<<<<<<< HEAD
   {
     timestamps: true,
     toJSON: {
@@ -112,6 +113,93 @@ const mediaSchema = new mongoose.Schema(
     },
   }
 );
+=======
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+    index: true
+  },
+  description: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  rating: {
+    type: Number,
+    min: 0,
+    max: 10,
+    default: 0
+  },
+  languages: [{
+    type: String,
+    trim: true
+  }],
+  genres: [{
+    type: mongoose.Schema.Types.ObjectId, //dont change
+    ref:'genres',
+  }],
+  releaseDate: {
+    type: Date,
+    required: true,
+    index: true
+  },
+  duration: {
+    type: Number, // for movies, in minutes
+    default: null
+  },
+  posterUrl: {
+    type: String,
+    default: ''
+  },
+  trailerUrl: {
+    type: String,
+    default: ''
+  },
+  director: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  cast: [{
+    type: String,
+    trim: true
+  }],
+  country: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  ageRating: {
+    type: String,
+    default: '',
+    trim: true
+  },
+  episodes: [episodeSchema] // embedded subdocuments for series
+// }, {
+//   timestamps: true,
+//   toJSON: { 
+//     virtuals: true,
+//     transform: function(doc, ret) {
+//       // Remove episodes field from movies in API responses
+//       if (ret.type === 'movie') {
+//         delete ret.episodes;
+//       }
+//       return ret;
+//     }
+//   },
+//   toObject: { 
+//     virtuals: true,
+//     transform: function(doc, ret) {
+//       // Also remove episodes when converting to object
+//       if (ret.type === 'movie') {
+//         delete ret.episodes;
+//       }
+//       return ret;
+//     }
+//   }
+// });
+>>>>>>> 1fde14aad6ff56e71d489817d820afb432943467
 
 // Indexes for efficient querying
 mediaSchema.index({ type: 1, genres: 1 });

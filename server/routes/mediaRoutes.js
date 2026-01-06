@@ -53,7 +53,11 @@ router.get("/", async (req, res) => {
 
     // Execute query with genre population
     const media = await Media.find(filter)
+<<<<<<< HEAD
       .populate("genres", "name description")
+=======
+      .populate('genres', 'name')
+>>>>>>> 1fde14aad6ff56e71d489817d820afb432943467
       .sort(sort)
       .limit(parseInt(limit))
       .skip(skip);
@@ -82,11 +86,16 @@ router.get("/", async (req, res) => {
 // GET single media by ID
 router.get("/:id", async (req, res) => {
   try {
+<<<<<<< HEAD
     const media = await Media.findById(req.params.id).populate(
       "genres",
       "name description"
     );
 
+=======
+    const media = await Media.findById(req.params.id).populate('genres', 'name');
+    
+>>>>>>> 1fde14aad6ff56e71d489817d820afb432943467
     if (!media) {
       return res.status(404).json({
         success: false,

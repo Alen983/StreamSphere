@@ -91,16 +91,21 @@ module.exports = (app) => {
   // User Onboarding - Save name, phone, and other fields
   app.post("/api/v1/user/onboarding", requireLogin, async (req, res) => {
     try {
-      const { name, phone, ...otherFields } = req.body;
+      const { name, phone, preferences, ...otherFields } = req.body;
       const userId = req.user.id;
 
       // Update user with onboarding data
       const updateData = { name, phone, ...otherFields };
+
+      if (preferences?.favoriteGenres) {
+        updateData.preferences = { favoriteGenres: preferences.favoriteGenres };
+      }
+
       const user = await User.findByIdAndUpdate(
         userId,
         { $set: updateData },
         { new: true, select: "-otp" }
-      );
+      ).populate("preferences.favoriteGenres");
 
       if (!user) {
         return res.status(404).json({ message: "User not found" });
