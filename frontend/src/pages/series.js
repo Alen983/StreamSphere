@@ -194,102 +194,119 @@ export default function Series() {
           position: "relative",
           zIndex: 10,
           bgcolor: "#000",
+          backgroundImage: 'url("/hero_bg.jpg")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            zIndex: 0,
+          },
         }}
       >
-        {/* Continue Watching - Series Only */}
-        {isAuthenticated &&
-          continueWatching &&
-          continueWatching.length > 0 && (
-            <MediaRow title="Continue Watching">
-              {continueWatching.map((item) => (
+        <Box sx={{ position: "relative", zIndex: 1 }}>
+          {/* Continue Watching - Series Only */}
+          {isAuthenticated &&
+            continueWatching &&
+            continueWatching.length > 0 && (
+              <MediaRow title="Continue Watching">
+                {continueWatching.map((item) => (
+                  <MediaCard
+                    key={`${item.media._id}-${item.seasonNumber || ""}-${
+                      item.episodeNumber || ""
+                    }`}
+                    media={item.media}
+                    showWatchlistButton={true}
+                  />
+                ))}
+              </MediaRow>
+            )}
+
+          {/* Top Rated Series */}
+          {topRatedSeries && topRatedSeries.length > 0 && (
+            <MediaRow title="Top Rated Series">
+              {topRatedSeries.map((series) => (
                 <MediaCard
-                  key={`${item.media._id}-${item.seasonNumber || ""}-${
-                    item.episodeNumber || ""
-                  }`}
-                  media={item.media}
+                  key={series._id}
+                  media={series}
                   showWatchlistButton={true}
                 />
               ))}
             </MediaRow>
           )}
 
-        {/* Top Rated Series */}
-        {topRatedSeries && topRatedSeries.length > 0 && (
-          <MediaRow title="Top Rated Series">
-            {topRatedSeries.map((series) => (
-              <MediaCard
-                key={series._id}
-                media={series}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Action Series */}
+          {actionSeries && actionSeries.length > 0 && (
+            <MediaRow title="Action Series">
+              {actionSeries.map((series) => (
+                <MediaCard
+                  key={series._id}
+                  media={series}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Action Series */}
-        {actionSeries && actionSeries.length > 0 && (
-          <MediaRow title="Action Series">
-            {actionSeries.map((series) => (
-              <MediaCard
-                key={series._id}
-                media={series}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Thriller Series */}
+          {thrillerSeries && thrillerSeries.length > 0 && (
+            <MediaRow title="Thriller Series">
+              {thrillerSeries.map((series) => (
+                <MediaCard
+                  key={series._id}
+                  media={series}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Thriller Series */}
-        {thrillerSeries && thrillerSeries.length > 0 && (
-          <MediaRow title="Thriller Series">
-            {thrillerSeries.map((series) => (
-              <MediaCard
-                key={series._id}
-                media={series}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Drama Series */}
+          {dramaSeries && dramaSeries.length > 0 && (
+            <MediaRow title="Drama Series">
+              {dramaSeries.map((series) => (
+                <MediaCard
+                  key={series._id}
+                  media={series}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Drama Series */}
-        {dramaSeries && dramaSeries.length > 0 && (
-          <MediaRow title="Drama Series">
-            {dramaSeries.map((series) => (
-              <MediaCard
-                key={series._id}
-                media={series}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Sci-Fi Series */}
+          {sciFiSeries && sciFiSeries.length > 0 && (
+            <MediaRow title="Sci-Fi Series">
+              {sciFiSeries.map((series) => (
+                <MediaCard
+                  key={series._id}
+                  media={series}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Sci-Fi Series */}
-        {sciFiSeries && sciFiSeries.length > 0 && (
-          <MediaRow title="Sci-Fi Series">
-            {sciFiSeries.map((series) => (
-              <MediaCard
-                key={series._id}
-                media={series}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
-
-        {/* Comedy Series */}
-        {comedySeries && comedySeries.length > 0 && (
-          <MediaRow title="Comedy Series">
-            {comedySeries.map((series) => (
-              <MediaCard
-                key={series._id}
-                media={series}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Comedy Series */}
+          {comedySeries && comedySeries.length > 0 && (
+            <MediaRow title="Comedy Series">
+              {comedySeries.map((series) => (
+                <MediaCard
+                  key={series._id}
+                  media={series}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
+        </Box>
       </Box>
 
       <Footer />

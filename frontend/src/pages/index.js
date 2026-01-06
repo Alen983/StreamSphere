@@ -169,100 +169,117 @@ export default function Home() {
           position: "relative",
           zIndex: 10,
           bgcolor: "#000",
+          backgroundImage: 'url("/hero_bg.jpg")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            zIndex: 0,
+          },
         }}
       >
-        {/* Continue Watching */}
-        {isAuthenticated && continueWatching && continueWatching.length > 0 && (
-          <MediaRow title="Continue Watching">
-            {continueWatching.map((item) => (
-              <MediaCard
-                key={`${item.media._id}-${item.seasonNumber || ""}-${
-                  item.episodeNumber || ""
-                }`}
-                media={item.media}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+        <Box sx={{ position: "relative", zIndex: 1 }}>
+          {/* Continue Watching */}
+          {isAuthenticated && continueWatching && continueWatching.length > 0 && (
+            <MediaRow title="Continue Watching">
+              {continueWatching.map((item) => (
+                <MediaCard
+                  key={`${item.media._id}-${item.seasonNumber || ""}-${
+                    item.episodeNumber || ""
+                  }`}
+                  media={item.media}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Top Rated Movies */}
-        {topRatedMovies && topRatedMovies.length > 0 && (
-          <MediaRow title="Top Rated Movies">
-            {topRatedMovies.map((movie) => (
-              <MediaCard
-                key={movie._id}
-                media={movie}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Top Rated Movies */}
+          {topRatedMovies && topRatedMovies.length > 0 && (
+            <MediaRow title="Top Rated Movies">
+              {topRatedMovies.map((movie) => (
+                <MediaCard
+                  key={movie._id}
+                  media={movie}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Top Rated Series */}
-        {topRatedSeries && topRatedSeries.length > 0 && (
-          <MediaRow title="Top Rated Series">
-            {topRatedSeries.map((series) => (
-              <MediaCard
-                key={series._id}
-                media={series}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Top Rated Series */}
+          {topRatedSeries && topRatedSeries.length > 0 && (
+            <MediaRow title="Top Rated Series">
+              {topRatedSeries.map((series) => (
+                <MediaCard
+                  key={series._id}
+                  media={series}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Action Movies */}
-        {actionMovies && actionMovies.length > 0 && (
-          <MediaRow title="Action Movies">
-            {actionMovies.map((movie) => (
-              <MediaCard
-                key={movie._id}
-                media={movie}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Action Movies */}
+          {actionMovies && actionMovies.length > 0 && (
+            <MediaRow title="Action Movies">
+              {actionMovies.map((movie) => (
+                <MediaCard
+                  key={movie._id}
+                  media={movie}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Thriller Content */}
-        {thrillerContent && thrillerContent.length > 0 && (
-          <MediaRow title="Thriller">
-            {thrillerContent.map((item) => (
-              <MediaCard
-                key={item._id}
-                media={item}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Thriller Content */}
+          {thrillerContent && thrillerContent.length > 0 && (
+            <MediaRow title="Thriller">
+              {thrillerContent.map((item) => (
+                <MediaCard
+                  key={item._id}
+                  media={item}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Drama Collection */}
-        {dramaContent && dramaContent.length > 0 && (
-          <MediaRow title="Drama">
-            {dramaContent.map((item) => (
-              <MediaCard
-                key={item._id}
-                media={item}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Drama Collection */}
+          {dramaContent && dramaContent.length > 0 && (
+            <MediaRow title="Drama">
+              {dramaContent.map((item) => (
+                <MediaCard
+                  key={item._id}
+                  media={item}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
 
-        {/* Sci-Fi Adventures */}
-        {sciFiContent && sciFiContent.length > 0 && (
-          <MediaRow title="Sci-Fi Adventures">
-            {sciFiContent.map((item) => (
-              <MediaCard
-                key={item._id}
-                media={item}
-                showWatchlistButton={true}
-              />
-            ))}
-          </MediaRow>
-        )}
+          {/* Sci-Fi Adventures */}
+          {sciFiContent && sciFiContent.length > 0 && (
+            <MediaRow title="Sci-Fi Adventures">
+              {sciFiContent.map((item) => (
+                <MediaCard
+                  key={item._id}
+                  media={item}
+                  showWatchlistButton={true}
+                />
+              ))}
+            </MediaRow>
+          )}
+        </Box>
       </Box>
 
       <Footer />
