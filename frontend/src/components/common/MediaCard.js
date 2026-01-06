@@ -239,6 +239,7 @@ export default function MediaCard({ media, showWatchlistButton = true }) {
         onClose={() => setVideoPlayerOpen(false)}
         videoUrl={media.videoUrl}
         mediaName={media.name}
+        mediaId={media._id}
       />
     </Card>
   );

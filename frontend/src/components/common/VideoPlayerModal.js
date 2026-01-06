@@ -3,7 +3,7 @@ import { Dialog, DialogContent, IconButton, Box } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import VideoPlayer from "./VideoPlayer";
 
-export default function VideoPlayerModal({ open, onClose, videoUrl, mediaName }) {
+export default function VideoPlayerModal({ open, onClose, videoUrl, mediaName, mediaId }) {
   useEffect(() => {
     if (open) {
       console.log("VideoPlayerModal opened");
@@ -58,7 +58,7 @@ export default function VideoPlayerModal({ open, onClose, videoUrl, mediaName })
           <Close />
         </IconButton>
         <Box sx={{ width: "100%", mt: 2 }}>
-          <VideoPlayer videoUrl={videoUrl} />
+          <VideoPlayer videoUrl={videoUrl} mediaId={mediaId} />
         </Box>
       </DialogContent>
     </Dialog>
