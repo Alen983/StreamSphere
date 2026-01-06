@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Box, TextField, InputAdornment, Paper, Typography } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { useRouter } from "next/router";
 import api from "@/lib/api";
+import VideoPlayerModal from "./VideoPlayerModal";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [showResults, setShowResults] = useState(false);
-  const router = useRouter();
+  const [selectedMedia, setSelectedMedia] = useState(null);
+  const [videoPlayerOpen, setVideoPlayerOpen] = useState(false);
 
   const handleSearch = async (value) => {
     setQuery(value);
@@ -28,10 +29,11 @@ export default function SearchBar() {
     }
   };
 
-  const handleResultClick = (mediaId) => {
+  const handleResultClick = (item) => {
+    setSelectedMedia(item);
     setShowResults(false);
     setQuery("");
-    router.push(`/media/${mediaId}`);
+    setVideoPlayerOpen(true);
   };
 
   return (
@@ -77,7 +79,7 @@ export default function SearchBar() {
           {results.map((item) => (
             <Box
               key={item._id}
-              onClick={() => handleResultClick(item._id)}
+              onClick={() => handleResultClick(item)}
               sx={{
                 p: 2,
                 cursor: "pointer",
@@ -94,6 +96,20 @@ export default function SearchBar() {
             </Box>
           ))}
         </Paper>
+      )}
+
+      {/* Video Player Modal */}
+      {selectedMedia && (
+        <VideoPlayerModal
+          open={videoPlayerOpen}
+          onClose={() => {
+            setVideoPlayerOpen(false);
+            setSelectedMedia(null);
+          }}
+          videoUrl={selectedMedia.videoUrl}
+          mediaName={selectedMedia.name}
+          mediaId={selectedMedia._id}
+        />
       )}
     </Box>
   );

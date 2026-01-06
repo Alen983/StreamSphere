@@ -18,7 +18,6 @@ import {
   Bookmark,
   History,
   Logout,
-  Settings,
 } from "@mui/icons-material";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -221,13 +220,6 @@ export default function Navbar() {
                     <History sx={{ color: "#fff" }} />
                   </ListItemIcon>
                   Watch History
-                </MenuItem>
-
-                <MenuItem onClick={() => handleNavigation("/settings")}>
-                  <ListItemIcon>
-                    <Settings sx={{ color: "#fff" }} />
-                  </ListItemIcon>
-                  Settings
                 </MenuItem>
 
                 <Divider sx={{ bgcolor: "rgba(255, 255, 255, 0.1)", my: 1 }} />
