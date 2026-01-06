@@ -166,7 +166,7 @@ export default function LoginForm({ onOTPSent, setError, setMessage, error, mess
             mt: 1,
           }}
         >
-          Don't have an account?{' '}
+          {/* Don't have an account?{' '}
           <Typography
             component="span"
             sx={{
@@ -183,7 +183,7 @@ export default function LoginForm({ onOTPSent, setError, setMessage, error, mess
             }}
           >
             Register
-          </Typography>
+          </Typography> */}
         </Typography>
       </Box>
     </form>
