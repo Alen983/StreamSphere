@@ -46,7 +46,7 @@ export default function SubscriptionPlansPanel({ user }) {
       const amount = premiumPrice * 100; // Convert to paise
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_1DP5mmOlF5G5ag',
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_1DP5mmOlFa5G5ag',
         amount: amount,
         currency: 'INR',
         name: 'StreamSphere',

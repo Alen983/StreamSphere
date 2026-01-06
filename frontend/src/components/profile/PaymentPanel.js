@@ -7,6 +7,7 @@ import {
   Alert,
   Button,
 } from '@mui/material';
+import api from '@/lib/api';
 
 export default function PaymentPanel({ user }) {
   const [paymentData, setPaymentData] = useState({
@@ -69,43 +70,71 @@ export default function PaymentPanel({ user }) {
     setPaymentError('');
 
     try {
-      // Create order on backend (you'll need to create this endpoint)
-      // For now, we'll use a mock order creation
-      const orderData = {
-        amount: parseFloat(paymentData.amount) * 100, // Convert to paise
-        currency: 'INR',
-        receipt: `receipt_${Date.now()}`,
-        notes: {
-          description: paymentData.description || 'Payment',
-          name: paymentData.name,
-          email: paymentData.email,
-          phone: paymentData.phone,
-        },
-      };
+      // Check if Razorpay script is loaded
+      if (!window.Razorpay) {
+        setPaymentError('Razorpay script is still loading. Please wait a moment and try again.');
+        setPaymentLoading(false);
+        return;
+      }
 
-      // Call your backend API to create order
-      // const response = await api.post('/api/v1/payments/create-order', orderData);
-      // const { orderId, amount, currency } = response.data;
+      // Call backend API to create order
+      const response = await api.post('/api/v1/user/pay', {
+        amount: parseFloat(paymentData.amount),
+        description: paymentData.description || 'Payment for StreamSphere',
+        name: paymentData.name,
+        email: paymentData.email,
+        phone: paymentData.phone,
+      });
 
-      // For demo purposes, using mock data
-      // In production, replace this with actual API call
-      const mockOrderId = `order_${Date.now()}`;
-      const amount = orderData.amount;
-      const currency = orderData.currency;
+      if (!response.data.success || !response.data.orderId) {
+        throw new Error(response.data.message || 'Failed to create payment order');
+      }
+
+      const orderId = response.data.orderId;
+      const amount = parseFloat(paymentData.amount) * 100; // Convert to paise
+      const currency = 'INR';
+
+      // Get Razorpay key from environment variable
+      const razorpayKey = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+      if (!razorpayKey) {
+        throw new Error('Razorpay key is not configured. Please set NEXT_PUBLIC_RAZORPAY_KEY_ID in your environment variables.');
+      }
 
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_1DP5mmOlF5G5ag', // Replace with your Razorpay key
+        key: razorpayKey,
         amount: amount,
         currency: currency,
         name: 'StreamSphere',
         description: paymentData.description || 'Payment for StreamSphere',
-        order_id: mockOrderId, // In production, use actual order_id from backend
-        handler: function (response) {
+        order_id: orderId,
+        handler: async function (response) {
           // Handle successful payment
           console.log('Payment successful:', response);
-          alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
-          // You can call your backend to verify payment
-          // api.post('/api/v1/payments/verify', { ...response, orderId: mockOrderId });
+          try {
+            // Verify payment on backend
+            const verifyResponse = await api.post('/api/v1/user/payment/verify', {
+              paymentId: response.razorpay_payment_id,
+              orderId: response.razorpay_order_id,
+              signature: response.razorpay_signature,
+            });
+
+            if (verifyResponse.data.success) {
+              alert('Payment successful! Your payment has been verified.');
+              // Reset form
+              setPaymentData({
+                amount: '',
+                description: '',
+                name: paymentData.name,
+                email: paymentData.email,
+                phone: paymentData.phone,
+              });
+            } else {
+              setPaymentError('Payment verification failed. Please contact support.');
+            }
+          } catch (verifyError) {
+            console.error('Payment verification error:', verifyError);
+            setPaymentError(verifyError.response?.data?.error || 'Payment verification failed. Please contact support.');
+          }
           setPaymentLoading(false);
         },
         prefill: {
@@ -126,13 +155,13 @@ export default function PaymentPanel({ user }) {
       const razorpay = new window.Razorpay(options);
       razorpay.on('payment.failed', function (response) {
         console.error('Payment failed:', response);
-        setPaymentError(response.error.description || 'Payment failed. Please try again.');
+        setPaymentError(response.error?.description || 'Payment failed. Please try again.');
         setPaymentLoading(false);
       });
       razorpay.open();
     } catch (error) {
       console.error('Payment error:', error);
-      setPaymentError(error.response?.data?.message || 'Failed to initiate payment. Please try again.');
+      setPaymentError(error.response?.data?.error || error.message || 'Failed to initiate payment. Please try again.');
       setPaymentLoading(false);
     }
   };
