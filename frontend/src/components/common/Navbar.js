@@ -23,6 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import Button from "@/components/common/Button";
 import LoginModal from "@/components/auth/LoginModal";
+import SearchBar from "@/components/common/SearchBar";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
@@ -87,8 +88,8 @@ export default function Navbar() {
             </Box>
           </Link>
 
-          {/* Navigation Links */}
-          <Box sx={{ display: "flex", gap: 4 }}>
+          {/* Navigation Links & Search */}
+          <Box sx={{ display: "flex", gap: 4, alignItems: "center" }}>
             <Link href="/" style={{ textDecoration: "none" }}>
               <Box
                 component="span"
@@ -131,7 +132,7 @@ export default function Navbar() {
               </Box>
             </Link>
 
-            <Link href="/about" style={{ textDecoration: "none" }}>
+            {/* <Link href="/about" style={{ textDecoration: "none" }}>
               <Box
                 component="span"
                 sx={{
@@ -143,7 +144,9 @@ export default function Navbar() {
               >
                 About
               </Box>
-            </Link>
+            </Link> */}
+
+            <SearchBar />
           </Box>
 
           {/* Auth Section */}

@@ -41,6 +41,7 @@ require("./routes/continueWatchingRoutes")(app);
 require("./routes/genreRoutes")(app);
 require("./routes/watchlistRoutes")(app);
 require("./routes/mediaRoutes")(app);
+require("./routes/searchRoutes")(app);
 
 // Health check endpoint
 app.get("/", (req, res) => {
