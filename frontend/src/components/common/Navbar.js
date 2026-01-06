@@ -1,5 +1,6 @@
 // src/components/common/Navbar.js
 import { useState } from "react";
+import Image from "next/image";
 import {
   AppBar,
   Toolbar,
@@ -73,7 +74,8 @@ export default function Navbar() {
                 cursor: "pointer",
               }}
             >
-              <MovieIcon sx={{ fontSize: 32, color: "#fff" }} />
+              {/* <MovieIcon sx={{ fontSize: 32, color: "#fff" }} /> */}
+              <Image src="/streamlogonav.png" alt="logo" width={32} height={32} />
               <Box
                 component="span"
                 sx={{

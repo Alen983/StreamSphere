@@ -147,7 +147,7 @@ export default function Home() {
           content="Watch movies, shows, and originals from across the globe"
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/streamlogo.png" />
       </Head>
 
       {/* Error Alert */}
