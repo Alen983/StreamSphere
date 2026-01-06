@@ -1,58 +1,72 @@
 import { useEffect, useState } from 'react';
-import {
-  Box,
-  Paper,
-  Typography,
-  TextField,
-  Alert,
-  Button,
-} from '@mui/material';
-import api from '@/lib/api';
-
+import { Box, Paper, Typography, TextField, Alert, Button } from '@mui/material';
+ 
+const inputSX = {
+  '& .MuiOutlinedInput-root': {
+    backgroundColor: '#1a1a1a',
+    color: '#fff',
+    '& fieldset': { borderColor: 'rgba(255,255,255,0.2)' },
+    '&:hover fieldset, &.Mui-focused fieldset': { borderColor: '#ffd700' },
+  },
+  '& .MuiInputLabel-root': {
+    color: 'rgba(255,255,255,0.6)',
+    '&.Mui-focused': { color: '#ffd700' },
+  },
+};
+ 
 export default function PaymentPanel({ user }) {
-  const [paymentData, setPaymentData] = useState({
+  const [data, setData] = useState({
     amount: '',
     description: '',
     name: '',
     email: '',
     phone: '',
   });
-  const [paymentError, setPaymentError] = useState('');
-  const [paymentLoading, setPaymentLoading] = useState(false);
-
-  // Load Razorpay script
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+ 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-    script.async = true;
-    document.body.appendChild(script);
-
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
-      }
-    };
+    const s = document.createElement('script');
+    s.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    s.async = true;
+    document.body.appendChild(s);
+    return () => document.body.removeChild(s);
   }, []);
-
-  // Pre-fill payment form with user data
+ 
   useEffect(() => {
-    if (user) {
-      setPaymentData(prev => ({
-        ...prev,
-        name: user?.name || '',
-        email: user?.email || '',
-        phone: user?.phone || '',
-      }));
-    }
+    if (user) setData(d => ({ ...d, name: user.name, email: user.email, phone: user.phone }));
   }, [user]);
-
-  const handlePaymentInputChange = (e) => {
-    const { name, value } = e.target;
-    setPaymentData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
-    setPaymentError('');
+ 
+  const onChange = e => setData({ ...data, [e.target.name]: e.target.value });
+ 
+  const pay = () => {
+    if (!data.amount || !data.name || !data.email || !data.phone)
+      return setError('All fields are required');
+ 
+    setLoading(true);
+    setError('');
+ 
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: data.amount * 100,
+      currency: 'INR',
+      name: 'StreamSphere',
+      description: data.description || 'Subscription Payment',
+      handler: () => {
+        alert('Payment Successful');
+        setLoading(false);
+      },
+      prefill: data,
+      theme: { color: '#ffd700' },
+      modal: { ondismiss: () => setLoading(false) },
+    };
+ 
+    const rzp = new window.Razorpay(options);
+    rzp.on('payment.failed', e => {
+      setError(e.error.description);
+      setLoading(false);
+    });
+    rzp.open();
   };
 
   const handleRazorpayPayment = async () => {
@@ -167,212 +181,38 @@ export default function PaymentPanel({ user }) {
   };
 
   return (
-    <Paper
-      elevation={0}
-      sx={{
-        backgroundColor: '#2a2a2a',
-        p: { xs: 3, md: 4 },
-        mb: 4,
-        borderRadius: 2,
-        border: 'none',
-      }}
-    >
-      <Typography
-        variant="h5"
-        sx={{
-          fontWeight: 600,
-          color: '#ffd700',
-          mb: 3,
-          fontSize: { xs: '1.25rem', md: '1.5rem' },
-        }}
-      >
+    <Paper sx={{ p: 4, backgroundColor: '#2a2a2a', borderRadius: 2 }}>
+      <Typography variant="h5" sx={{ color: '#ffd700', mb: 3 }}>
         Add Plans
       </Typography>
-
-      {paymentError && (
-        <Alert severity="error" sx={{ mb: 2, backgroundColor: 'rgba(211, 47, 47, 0.1)', color: '#ff5252' }}>
-          {paymentError}
-        </Alert>
-      )}
-
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <TextField
-          fullWidth
-          label="Amount (₹)"
-          name="amount"
-          type="number"
-          value={paymentData.amount}
-          onChange={handlePaymentInputChange}
-          required
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              backgroundColor: '#1a1a1a',
-              color: '#fff',
-              '& fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffd700',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffd700',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: 'rgba(255, 255, 255, 0.6)',
-              '&.Mui-focused': {
-                color: '#ffd700',
-              },
-            },
-          }}
-        />
-
-        <TextField
-          fullWidth
-          label="Description"
-          name="description"
-          value={paymentData.description}
-          onChange={handlePaymentInputChange}
-          placeholder="e.g., Subscription payment"
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              backgroundColor: '#1a1a1a',
-              color: '#fff',
-              '& fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffd700',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffd700',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: 'rgba(255, 255, 255, 0.6)',
-              '&.Mui-focused': {
-                color: '#ffd700',
-              },
-            },
-          }}
-        />
-
-        <TextField
-          fullWidth
-          label="Name"
-          name="name"
-          value={paymentData.name}
-          onChange={handlePaymentInputChange}
-          required
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              backgroundColor: '#1a1a1a',
-              color: '#fff',
-              '& fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffd700',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffd700',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: 'rgba(255, 255, 255, 0.6)',
-              '&.Mui-focused': {
-                color: '#ffd700',
-              },
-            },
-          }}
-        />
-
-        <TextField
-          fullWidth
-          label="Email"
-          name="email"
-          type="email"
-          value={paymentData.email}
-          onChange={handlePaymentInputChange}
-          required
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              backgroundColor: '#1a1a1a',
-              color: '#fff',
-              '& fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffd700',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffd700',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: 'rgba(255, 255, 255, 0.6)',
-              '&.Mui-focused': {
-                color: '#ffd700',
-              },
-            },
-          }}
-        />
-
-        <TextField
-          fullWidth
-          label="Phone"
-          name="phone"
-          type="tel"
-          value={paymentData.phone}
-          onChange={handlePaymentInputChange}
-          required
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              backgroundColor: '#1a1a1a',
-              color: '#fff',
-              '& fieldset': {
-                borderColor: 'rgba(255, 255, 255, 0.2)',
-              },
-              '&:hover fieldset': {
-                borderColor: '#ffd700',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: '#ffd700',
-              },
-            },
-            '& .MuiInputLabel-root': {
-              color: 'rgba(255, 255, 255, 0.6)',
-              '&.Mui-focused': {
-                color: '#ffd700',
-              },
-            },
-          }}
-        />
-
+ 
+      {error && <Alert severity="error">{error}</Alert>}
+ 
+      <Box sx={{ display: 'grid', gap: 3 }}>
+        {['amount', 'description', 'name', 'email', 'phone'].map(field => (
+          <TextField
+            key={field}
+            name={field}
+            label={field.charAt(0).toUpperCase() + field.slice(1)}
+            type={field === 'amount' ? 'number' : 'text'}
+            value={data[field]}
+            onChange={onChange}
+            sx={inputSX}
+            fullWidth
+          />
+        ))}
+ 
         <Button
-          variant="contained"
-          onClick={handleRazorpayPayment}
-          disabled={paymentLoading}
           fullWidth
-          sx={{
-            mt: 2,
-            py: 1.5,
-            backgroundColor: '#ffd700',
-            color: '#000',
-            fontWeight: 600,
-            '&:hover': {
-              backgroundColor: '#ffed4e',
-            },
-            '&:disabled': {
-              backgroundColor: 'rgba(255, 215, 0, 0.5)',
-              color: 'rgba(0, 0, 0, 0.5)',
-            },
-          }}
+          onClick={pay}
+          disabled={loading}
+          sx={{ py: 1.5, fontWeight: 600, bgcolor: '#ffd700', color: '#000' }}
         >
-          {paymentLoading ? 'Processing...' : 'Proceed to Payment'}
+          {loading ? 'Processing...' : 'Proceed to Payment'}
         </Button>
       </Box>
     </Paper>
   );
 }
+ 
 
