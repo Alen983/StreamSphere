@@ -123,7 +123,7 @@ module.exports = (app) => {
 
   // Get Current User
   app.get("/api/v1/current/user", requireLogin, async (req, res) => {
-    console.log("CURRENT USER: ", req);
+    console.log("CURRENT USER: ");
 
     try {
       const user = await User.findById(req.user.id, "-otp");
