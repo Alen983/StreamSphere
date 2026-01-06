@@ -18,8 +18,6 @@ export default function Hero({ slides = [] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
-  const { isAuthenticated } = useAuth();
-  const router = useRouter();
 
   // Auto-play functionality
   useEffect(() => {
@@ -72,7 +70,8 @@ export default function Hero({ slides = [] }) {
     }
   };
 
-  if (slides.length === 0) {
+  // Show static hero when user is NOT authenticated
+  if (!isAuthenticated) {
     return (
       <Box
         sx={{
@@ -147,8 +146,81 @@ export default function Hero({ slides = [] }) {
     );
   }
 
+  // Show empty state for authenticated users when no slides
+  if (slides.length === 0) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "flex-start",
+          px: { xs: 3, md: 4, lg: 3 },
+          position: "relative",
+          backgroundImage: 'url("/hero_bg.jpg")',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundColor: "#000",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            zIndex: 1,
+          },
+        }}
+      >
+        <Box sx={{ maxWidth: "700px", position: "relative", zIndex: 2 }}>
+          {/* Main Heading */}
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: { xs: "48px", md: "72px" },
+              fontWeight: 400,
+              color: "#ffd700",
+              mb: 3,
+              fontFamily: "serif",
+              lineHeight: 1.2,
+            }}
+          >
+            One Platform. Infinite Worlds.
+          </Typography>
+
+          {/* Description */}
+          <Typography
+            sx={{
+              fontSize: { xs: "16px", md: "18px" },
+              color: "rgba(255, 255, 255, 0.8)",
+              mb: 4,
+              lineHeight: 1.6,
+              maxWidth: "500px",
+            }}
+          >
+            Bringing you movies, shows, and originals from across the globe, all
+            curated to keep you entertained, inspired, and connected.
+          </Typography>
+
+          {/* CTA Button */}
+          <Button
+            variant="primary"
+            size="medium"
+            borderRadius="30px"
+            onClick={() => router.push("/browse")}
+          >
+            Browse Content
+          </Button>
+        </Box>
+      </Box>
+    );
+  }
+
   const currentSlide = slides[currentIndex];
 
+  // Show carousel for authenticated users when slides exist
   return (
     <Box
       sx={{
@@ -273,21 +345,19 @@ export default function Hero({ slides = [] }) {
               borderRadius="6px"
               onClick={handlePlayNow}
             >
-              {isAuthenticated ? "PLAY NOW" : "START STREAMING"}
+              PLAY NOW
             </Button>
 
-            {/* Outlined Button - Only show if authenticated */}
-            {isAuthenticated && (
-              <Button
-                variant="outlined"
-                size="small"
-                startIcon={<Info />}
-                borderRadius="6px"
-                onClick={handleMoreInfo}
-              >
-                MORE INFO
-              </Button>
-            )}
+            {/* Outlined Button */}
+            <Button
+              variant="outlined"
+              size="small"
+              startIcon={<Info />}
+              borderRadius="6px"
+              onClick={handleMoreInfo}
+            >
+              MORE INFO
+            </Button>
           </Box>
         </Box>
       </Box>
