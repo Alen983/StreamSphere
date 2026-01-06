@@ -6,17 +6,14 @@ import { useAuth } from '@/context/AuthContext';
 import api from '@/lib/api';
 import Footer from '@/components/Footer';
 import ProfileHeader from '@/components/profile/ProfileHeader';
-import AccountInformationPanel from '@/components/profile/AccountInformationPanel';
-import LogoutButton from '@/components/profile/LogoutButton';
-import FavoritesSection from '@/components/profile/FavoritesSection';
+import SubscriptionPlansPanel from '@/components/profile/SubscriptionPlansPanel';
 
-export default function Profile() {
-  const { isAuthenticated, loading: authLoading, logout } = useAuth();
+export default function Subscription() {
+  const { isAuthenticated, loading: authLoading } = useAuth();
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -40,41 +37,16 @@ export default function Profile() {
 
     if (isAuthenticated) {
       fetchUser();
-      // TODO: Fetch favorites when API is available
-      // fetchFavorites();
     }
   }, [isAuthenticated]);
 
-  // Refresh user data when page becomes visible (e.g., returning from subscription page)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && isAuthenticated && !loading) {
-        const fetchUser = async () => {
-          try {
-            const response = await api.get('/api/v1/current/user');
-            setUser(response.data.user);
-          } catch (error) {
-            console.error('Error refreshing user:', error);
-          }
-        };
-        fetchUser();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [isAuthenticated, loading]);
-
-  const handleUpdateUser = async (updatedUser) => {
+  const handleSubscriptionUpdate = async () => {
+    // Refresh user data after subscription update
     try {
-      // TODO: Implement update user API call
-      // await api.put(`/api/v1/update/user/${user._id}`, updatedUser);
-      setUser({ ...user, ...updatedUser });
+      const response = await api.get('/api/v1/current/user');
+      setUser(response.data.user);
     } catch (error) {
-      console.error('Error updating user:', error);
-      setError('Failed to update profile');
+      console.error('Error refreshing user:', error);
     }
   };
 
@@ -101,7 +73,7 @@ export default function Profile() {
   return (
     <>
       <Head>
-        <title>User Profile - StreamSphere</title>
+        <title>Subscription Plans - StreamSphere</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
@@ -132,14 +104,11 @@ export default function Profile() {
         <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
           <ProfileHeader user={user} />
 
-          <AccountInformationPanel user={user} onUpdate={handleUpdateUser} />
-
-          <LogoutButton onLogout={logout} />
-
-          <FavoritesSection favorites={favorites} />
+          <SubscriptionPlansPanel user={user} />
         </Container>
       </Box>
       <Footer />
     </>
   );
 }
+

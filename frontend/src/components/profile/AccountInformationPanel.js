@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import {
   Box,
   Paper,
@@ -8,9 +9,10 @@ import {
   Grid,
   Button,
 } from '@mui/material';
-import { Edit as EditIcon } from '@mui/icons-material';
+import { Edit as EditIcon, WorkspacePremium as PremiumIcon } from '@mui/icons-material';
 
 export default function AccountInformationPanel({ user, onUpdate }) {
+  const router = useRouter();
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState({
     name: user?.name || '',
@@ -69,17 +71,37 @@ export default function AccountInformationPanel({ user, onUpdate }) {
           Account Information
         </Typography>
         {!isEditing && (
-          <IconButton
-            onClick={handleEdit}
-            sx={{
-              color: '#ffd700',
-              '&:hover': {
-                backgroundColor: 'rgba(255, 215, 0, 0.1)',
-              },
-            }}
-          >
-            <EditIcon />
-          </IconButton>
+          <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+            <Button
+              variant="contained"
+              onClick={() => router.push('/subscription')}
+              startIcon={<PremiumIcon />}
+              sx={{
+                backgroundColor: '#ffd700',
+                color: '#000',
+                fontWeight: 600,
+                textTransform: 'none',
+                px: 2,
+                py: 0.75,
+                '&:hover': {
+                  backgroundColor: '#ffed4e',
+                },
+              }}
+            >
+              Premium
+            </Button>
+            <IconButton
+              onClick={handleEdit}
+              sx={{
+                color: '#ffd700',
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                },
+              }}
+            >
+              <EditIcon />
+            </IconButton>
+          </Box>
         )}
       </Box>
 

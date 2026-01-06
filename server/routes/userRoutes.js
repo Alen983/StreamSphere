@@ -57,9 +57,14 @@ module.exports = (app) => {
      // Update User Info
   app.put("/api/v1/update/user/:id", async (req, res) => {
     const { id } = req.params;
-    const { name, phone } = req.body;
+    const { name, phone, subscriptionType } = req.body;
     try {
-      const response = await User.updateOne({ _id: id }, { name, phone });
+      const updateData = {};
+      if (name !== undefined) updateData.name = name;
+      if (phone !== undefined) updateData.phone = phone;
+      if (subscriptionType !== undefined) updateData.subscriptionType = subscriptionType;
+      
+      const response = await User.updateOne({ _id: id }, updateData);
       res.status(200).json({ message: "User updated successfully", response });
     } catch (error) {
       console.log(error);
