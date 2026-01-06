@@ -3,27 +3,32 @@ import Navbar from "./Navbar";
 
 export default function Layout({ children }) {
   return (
-    <Container
+    <Box
       sx={{
         minHeight: "100vh",
-        px: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
       }}
     >
-      {/* Navbar at top */}
-      <Navbar />
+      {/* Navbar at top - full width but centered content */}
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "center" }}>
+        <Navbar />
+      </Box>
 
-      {/* Page content with top padding for fixed navbar */}
+      {/* Page content - centered */}
       <Box
-        //component="main"
-        sx={
-          {
-            // min,
-            // maxWidth: { xs: "100%", md: "1400px", lg: "1600px" },
-          }
-        }
+        component="main"
+        sx={{
+          width: "100%",
+          maxWidth: { xs: "100%", md: "1400px", lg: "1600px" },
+          mx: "auto", // margin auto for horizontal centering
+          // px: { xs: 2, sm: 1, md: 4 }, // padding on sides
+        }}
       >
         {children}
       </Box>
-    </Container>
+    </Box>
   );
 }
