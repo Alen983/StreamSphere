@@ -1,3 +1,4 @@
+// src/pages/_app.js
 import "@/styles/globals.css";
 import { Provider } from "react-redux";
 import { store } from "@/redux/store";
@@ -6,12 +7,12 @@ import { AuthProvider } from "@/context/AuthContext";
 
 export default function App({ Component, pageProps }) {
   return (
-    <AuthProvider>
-      <Layout>
-        <Provider store={store}>
+    <Provider store={store}>
+      <AuthProvider>
+        <Layout>
           <Component {...pageProps} />
-        </Provider>
-      </Layout>
-    </AuthProvider>
+        </Layout>
+      </AuthProvider>
+    </Provider>
   );
 }

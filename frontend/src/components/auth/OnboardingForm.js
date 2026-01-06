@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Box,
   TextField,
@@ -6,57 +6,72 @@ import {
   Typography,
   Alert,
   CircularProgress,
-} from '@mui/material';
-import { ArrowForward as ArrowForwardIcon } from '@mui/icons-material';
-import api from '@/lib/api';
-import { useRouter } from 'next/router';
-import { useAuth } from '@/context/AuthContext';
+} from "@mui/material";
+import { ArrowForward as ArrowForwardIcon } from "@mui/icons-material";
+import api from "@/lib/api";
 
-export default function OnboardingForm({ email, token, onComplete, setError, setMessage, error, message }) {
-  const { login } = useAuth();
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
+export default function OnboardingForm({
+  email,
+  token,
+  onComplete,
+  setError,
+  setMessage,
+  error,
+  message,
+}) {
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setMessage('');
+    setError("");
+    setMessage("");
     setLoading(true);
 
     try {
-      console.log('Submitting onboarding data:', { name, phone });
-      const response = await api.post('/api/v1/user/onboarding', { name, phone });
-      console.log('Onboarding Response:', response.data);
+      console.log("Submitting onboarding data:", { name, phone });
+      const response = await api.post("/api/v1/user/onboarding", {
+        name,
+        phone,
+      });
+      console.log("Onboarding Response:", response.data);
 
-      if (response.data.message === 'Onboarding completed successfully') {
-        setMessage('Onboarding completed successfully!');
-        // Token is already stored from OTP verification, just redirect
-        // Wait a moment to show success message, then redirect
+      if (response.data.message === "Onboarding completed successfully") {
+        setMessage("Profile completed successfully! Redirecting...");
+
+        // Wait a moment to show success message, then call onComplete
         setTimeout(() => {
-          router.push('/');
           if (onComplete) {
             onComplete();
           }
-        }, 1000);
+        }, 1500);
       } else {
-        setError(response.data.message || 'Failed to complete onboarding.');
+        setError(response.data.message || "Failed to complete onboarding.");
       }
     } catch (error) {
-      console.error('Onboarding Error:', error);
-      console.error('Error details:', {
+      console.error("Onboarding Error:", error);
+      console.error("Error details:", {
         message: error.message,
         response: error.response?.data,
         status: error.response?.status,
       });
 
-      if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
-        setError('Cannot connect to server. Please ensure the backend server is running on port 5001.');
+      if (
+        error.code === "ECONNREFUSED" ||
+        error.message.includes("Network Error")
+      ) {
+        setError(
+          "Cannot connect to server. Please ensure the backend server is running on port 5001."
+        );
       } else if (error.response?.status === 401) {
-        setError('Session expired. Please login again.');
+        setError("Session expired. Please login again.");
       } else {
-        setError(error.response?.data?.message || error.message || 'Failed to complete onboarding. Please try again.');
+        setError(
+          error.response?.data?.message ||
+            error.message ||
+            "Failed to complete onboarding. Please try again."
+        );
       }
     } finally {
       setLoading(false);
@@ -65,27 +80,14 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
 
   return (
     <form onSubmit={handleSubmit}>
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        {/* Title */}
-        <Typography
-          variant="h5"
-          component="h2"
-          sx={{
-            fontFamily: 'var(--font-playfair), "Georgia", serif',
-            fontWeight: 600,
-            color: '#000',
-            mb: 1,
-          }}
-        >
-          Complete Your Profile
-        </Typography>
-
+      <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+        {/* Subtitle */}
         <Typography
           variant="body2"
           sx={{
-            color: '#666',
+            color: "#666",
             mb: 2,
-            fontSize: '0.9rem',
+            fontSize: "0.9rem",
           }}
         >
           Please provide some information to get started.
@@ -97,9 +99,9 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
             variant="body2"
             sx={{
               mb: 1,
-              color: '#333',
+              color: "#333",
               fontWeight: 500,
-              fontSize: '0.875rem',
+              fontSize: "0.875rem",
             }}
           >
             Enter your name
@@ -112,20 +114,20 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
             required
             placeholder="Enter your name"
             sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#f5f5f5',
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#f5f5f5",
                 borderRadius: 0,
-                '& fieldset': {
-                  borderColor: '#e0e0e0',
+                "& fieldset": {
+                  borderColor: "#e0e0e0",
                 },
-                '&:hover fieldset': {
-                  borderColor: '#bdbdbd',
+                "&:hover fieldset": {
+                  borderColor: "#bdbdbd",
                 },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#d32f2f',
+                "&.Mui-focused fieldset": {
+                  borderColor: "#d32f2f",
                 },
               },
-              '& .MuiInputBase-input': {
+              "& .MuiInputBase-input": {
                 py: 1.5,
               },
             }}
@@ -138,9 +140,9 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
             variant="body2"
             sx={{
               mb: 1,
-              color: '#333',
+              color: "#333",
               fontWeight: 500,
-              fontSize: '0.875rem',
+              fontSize: "0.875rem",
             }}
           >
             Enter your phone number
@@ -149,24 +151,24 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
             fullWidth
             type="tel"
             value={phone}
-            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+            onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
             required
             placeholder="Enter your phone number"
             sx={{
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: '#f5f5f5',
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "#f5f5f5",
                 borderRadius: 0,
-                '& fieldset': {
-                  borderColor: '#e0e0e0',
+                "& fieldset": {
+                  borderColor: "#e0e0e0",
                 },
-                '&:hover fieldset': {
-                  borderColor: '#bdbdbd',
+                "&:hover fieldset": {
+                  borderColor: "#bdbdbd",
                 },
-                '&.Mui-focused fieldset': {
-                  borderColor: '#d32f2f',
+                "&.Mui-focused fieldset": {
+                  borderColor: "#d32f2f",
                 },
               },
-              '& .MuiInputBase-input': {
+              "& .MuiInputBase-input": {
                 py: 1.5,
               },
             }}
@@ -194,18 +196,18 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
           disabled={loading || !name.trim() || !phone.trim()}
           fullWidth
           sx={{
-            backgroundColor: '#d32f2f',
-            color: '#fff',
+            backgroundColor: "#d32f2f",
+            color: "#fff",
             py: 1.5,
             borderRadius: 0,
-            textTransform: 'none',
-            fontSize: '1rem',
+            textTransform: "none",
+            fontSize: "1rem",
             fontWeight: 500,
-            '&:hover': {
-              backgroundColor: '#b71c1c',
+            "&:hover": {
+              backgroundColor: "#b71c1c",
             },
-            '&:disabled': {
-              backgroundColor: '#d32f2f',
+            "&:disabled": {
+              backgroundColor: "#d32f2f",
               opacity: 0.6,
             },
           }}
@@ -217,11 +219,11 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
                 sx={{
                   width: 24,
                   height: 24,
-                  borderRadius: '50%',
-                  border: '2px solid #fff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  borderRadius: "50%",
+                  border: "2px solid #fff",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 <ArrowForwardIcon sx={{ fontSize: 16 }} />
@@ -229,10 +231,9 @@ export default function OnboardingForm({ email, token, onComplete, setError, set
             )
           }
         >
-          {loading ? 'Saving...' : 'Complete Setup'}
+          {loading ? "Saving..." : "Complete Setup"}
         </Button>
       </Box>
     </form>
   );
 }
-

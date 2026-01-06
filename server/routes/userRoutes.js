@@ -4,7 +4,7 @@ const User = mongoose.model("users");
 module.exports = (app) => {
     app.post("/api/v1/user/add", async (req, res) => {
     console.log("ADD NEW USER");
-    const { name, email, subscriptionType} = req.body;
+    const { name, email, subscriptionType , preferences} = req.body;
 
     try {
       const user = await User.findOne({ name });
@@ -13,7 +13,7 @@ module.exports = (app) => {
         return res.status(400).json({ message: "User already exists" });
       }
 
-      userFields = { name, email, subscriptionType };
+      userFields = { name, email, subscriptionType, preferences };
       const response = await User.create(userFields);
 
       res.status(201).json({ message: "User added successfully", response });
@@ -83,4 +83,44 @@ module.exports = (app) => {
       res.status(500).json({ message: error.message });
     }
   });
+
+  app.put("/api/v1/user/preferences/:id", async (req, res) => {
+  const { id } = req.params;
+  const { preferences } = req.body;
+
+  try {
+    const response = await User.findByIdAndUpdate(
+      id,
+      { preferences },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "Preferences updated successfully",
+      response
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+});
+// get pref
+
+// app.get("/api/v1/user/preferences/:email", async (req, res) => {
+//   const { email } = req.params;
+
+//   try {
+//     const user = await User.findOne({ email }).select("preferences");
+
+//     if (!user) {
+//       return res.status(400).json({ message: "User doesn't exist" });
+//     }
+
+//     res.status(200).json({ preferences: user.preferences });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: error.message });
+//   }
+// });
+
 };
