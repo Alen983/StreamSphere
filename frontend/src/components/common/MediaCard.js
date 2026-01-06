@@ -1,6 +1,5 @@
 // src/components/common/MediaCard.js
 import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
 import {
   Card,
   CardMedia,
@@ -12,12 +11,13 @@ import {
 } from "@mui/material";
 import { Bookmark, BookmarkBorder } from "@mui/icons-material";
 import { useAuth } from "@/context/AuthContext";
+import VideoPlayerModal from "./VideoPlayerModal";
 
 export default function MediaCard({ media, showWatchlistButton = true }) {
-  const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [inWatchlist, setInWatchlist] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [videoPlayerOpen, setVideoPlayerOpen] = useState(false);
 
   useEffect(() => {
     // Check if media is in watchlist when component mounts
@@ -90,8 +90,11 @@ export default function MediaCard({ media, showWatchlistButton = true }) {
   };
 
   const handleCardClick = () => {
-    // Navigate to player page
-    router.push(`/watch/${media._id}`);
+    // Open video player modal
+    console.log("Card clicked, opening video player");
+    console.log("Media:", media);
+    console.log("Video URL:", media.videoUrl);
+    setVideoPlayerOpen(true);
   };
 
   return (
@@ -229,6 +232,15 @@ export default function MediaCard({ media, showWatchlistButton = true }) {
           {media.genres?.map((g) => g.name).join(", ")}
         </Typography>
       </CardContent>
+
+      {/* Video Player Modal */}
+      <VideoPlayerModal
+        open={videoPlayerOpen}
+        onClose={() => setVideoPlayerOpen(false)}
+        videoUrl={media.videoUrl}
+        mediaName={media.name}
+        mediaId={media._id}
+      />
     </Card>
   );
 }
