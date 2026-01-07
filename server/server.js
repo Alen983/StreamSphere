@@ -1,13 +1,13 @@
-const express = require("express"); // npm i express
-const mongoose = require("mongoose"); // npm i mongoose
-const cors = require("cors"); // npm i cors
-require("dotenv").config(); // Load environment variables. Make sure .env is in .gitignore
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+require("dotenv").config();
 
 const port = process.env.PORT || 5001;
 
 const app = express();
 
-// CORS Configuration - MUST be before other middleware
+// CORS Configuration
 app.use(cors());
 
 // Body parser middleware
@@ -30,17 +30,20 @@ require("./models/ContinueWatching");
 require("./models/Media");
 require("./models/Genre");
 require("./models/Watchlist");
+require("./models/Payment");
 
 // Middleware
 require("./middleware/requireMail");
 
 // Routes
-require("./routes/userRoutes")(app); // To Learn CRUD Operations
+require("./routes/userRoutes")(app);
 require("./routes/authRoutes")(app);
 require("./routes/continueWatchingRoutes")(app);
 require("./routes/genreRoutes")(app);
 require("./routes/watchlistRoutes")(app);
 require("./routes/mediaRoutes")(app);
+require("./routes/paymentRoutes")(app);
+require("./routes/videoRoutes")(app); // NEW: Video streaming routes
 
 // Health check endpoint
 app.get("/", (req, res) => {
