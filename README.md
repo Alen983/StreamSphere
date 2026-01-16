@@ -1,5 +1,12 @@
 # StreamSphere
 
+<p align="center">
+  <img width="660" height="350" src="main.gif">
+</p>    
+
+
+  <p align="center"> "One Platform, Infinite Worlds."</p>  
+
 ## Design
 
 The design for this project was created in Figma.
