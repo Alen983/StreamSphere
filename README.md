@@ -48,10 +48,11 @@ npm install
 ```
 
 
-### Notes
+## Notes
 - The Figma file contains the full UI/UX design.
 - Screens in this repo reflect the latest approved design.
 - The additional changes are also completed.
 - This is the source of truth for the frontend and backend implementation.
 - Install the dependencies.
+- run using 'npm run dev'
 
