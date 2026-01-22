@@ -1,9 +1,9 @@
 # StreamSphere
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="StreamSphere_light">
-  <source media="(prefers-color-scheme: light)" srcset="StreamSphere_dark">
-  <img alt="Storj logo" src="https://raw.githubusercontent.com/storj/.github/main/assets/storj-logo-full-color.png" width="140">
+  <source media="(prefers-color-scheme: dark)" srcset="StreamSphere_light.png">
+  <source media="(prefers-color-scheme: light)" srcset="StreamSphere_dark.png">
+ <img alt="StreamSphere logo" src="StreamSphere_light.png" width="200">
 </picture>
 
 
