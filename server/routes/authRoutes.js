@@ -47,7 +47,9 @@ module.exports = (app) => {
       const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ message: "User not found. Please request OTP first." });
+        return res
+          .status(400)
+          .json({ message: "User not found. Please request OTP first." });
       }
 
       // Validate OTP
@@ -98,13 +100,16 @@ module.exports = (app) => {
       const updateData = { name, phone, ...otherFields };
 
       if (preferences?.favoriteGenres) {
-        updateData.preferences = { favoriteGenres: preferences.favoriteGenres };
+        updateData["preferences.favoriteGenres"] = preferences.favoriteGenres;
+      }
+      if (preferences?.favoriteMedia) {
+        updateData["preferences.favoriteMedia"] = preferences.favoriteMedia;
       }
 
       const user = await User.findByIdAndUpdate(
         userId,
         { $set: updateData },
-        { new: true, select: "-otp" }
+        { new: true, select: "-otp" },
       ).populate("preferences.favoriteGenres");
 
       if (!user) {
@@ -126,7 +131,9 @@ module.exports = (app) => {
     console.log("CURRENT USER: ");
 
     try {
-      const user = await User.findById(req.user.id, "-otp");
+      const user = await User.findById(req.user.id, "-otp")
+        .populate("preferences.favoriteMedia")
+        .populate("preferences.favoriteGenres");
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }

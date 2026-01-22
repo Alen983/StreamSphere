@@ -10,19 +10,27 @@ import {
   Tooltip,
   CircularProgress,
 } from "@mui/material";
-import { Bookmark, BookmarkBorder } from "@mui/icons-material";
+import {
+  Bookmark,
+  BookmarkBorder,
+  Favorite,
+  FavoriteBorder,
+} from "@mui/icons-material";
 import { useAuth } from "@/context/AuthContext";
 
 export default function MediaCard({ media, showWatchlistButton = true }) {
   const router = useRouter();
   const { isAuthenticated } = useAuth();
   const [inWatchlist, setInWatchlist] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [favLoading, setFavLoading] = useState(false);
 
   useEffect(() => {
     // Check if media is in watchlist when component mounts
-    if (isAuthenticated && showWatchlistButton) {
-      checkWatchlistStatus();
+    if (isAuthenticated) {
+      if (showWatchlistButton) checkWatchlistStatus();
+      checkFavoriteStatus();
     }
   }, [isAuthenticated, media._id]);
 
@@ -42,6 +50,51 @@ export default function MediaCard({ media, showWatchlistButton = true }) {
       }
     } catch (error) {
       console.error("Error checking watchlist status:", error);
+    }
+  };
+
+  const checkFavoriteStatus = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      const response = await fetch(`/api/v1/favorites/check/${media._id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        setIsFavorite(data.inFavorites);
+      }
+    } catch (error) {
+      console.error("Error checking favorite status:", error);
+    }
+  };
+
+  const handleFavoriteToggle = async (e) => {
+    e.stopPropagation();
+    if (!isAuthenticated) return;
+
+    setFavLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`/api/v1/favorites/${media._id}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIsFavorite(!isFavorite);
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    } finally {
+      setFavLoading(false);
     }
   };
 
@@ -116,7 +169,7 @@ export default function MediaCard({ media, showWatchlistButton = true }) {
         "&:hover .card-overlay": {
           opacity: 1,
         },
-        "&:hover .watchlist-button": {
+        "&:hover .watchlist-button, &:hover .favorite-button": {
           opacity: 1,
         },
       }}
@@ -131,6 +184,40 @@ export default function MediaCard({ media, showWatchlistButton = true }) {
           objectFit: "cover",
         }}
       />
+
+      {/* Favorite Button */}
+      {isAuthenticated && (
+        <Tooltip
+          title={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          <IconButton
+            className="favorite-button"
+            onClick={handleFavoriteToggle}
+            disabled={favLoading}
+            sx={{
+              position: "absolute",
+              top: 8,
+              left: 8,
+              backgroundColor: "rgba(0, 0, 0, 0.7)",
+              color: isFavorite ? "#ff4081" : "#fff",
+              opacity: 0,
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
+                transform: "scale(1.1)",
+              },
+            }}
+          >
+            {favLoading ? (
+              <CircularProgress size={20} sx={{ color: "#fff" }} />
+            ) : isFavorite ? (
+              <Favorite />
+            ) : (
+              <FavoriteBorder />
+            )}
+          </IconButton>
+        </Tooltip>
+      )}
 
       {/* Watchlist Button */}
       {showWatchlistButton && isAuthenticated && (

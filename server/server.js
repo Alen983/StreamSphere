@@ -40,6 +40,7 @@ require("./routes/authRoutes")(app);
 require("./routes/continueWatchingRoutes")(app);
 require("./routes/genreRoutes")(app);
 require("./routes/watchlistRoutes")(app);
+require("./routes/favoriteRoutes")(app);
 require("./routes/mediaRoutes")(app);
 require("./routes/searchRoutes")(app);
 
