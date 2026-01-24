@@ -55,6 +55,7 @@ npm install
 ```
 ## Contributions
 See [Contribute.md](Contribute.md) for contribution guidelines.
+Thanks for your interest in contributing! ❤️
 
 ## Notes
 - The Figma file contains the full UI/UX design.
