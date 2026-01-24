@@ -53,7 +53,8 @@ npm install
 cd frontend
 npm install
 ```
-
+## Contributions
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ## Notes
 - The Figma file contains the full UI/UX design.
