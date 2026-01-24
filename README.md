@@ -63,3 +63,4 @@ npm install
 - Install the dependencies.
 - run using 'npm run dev'
 
+⭐ If you like this project, consider giving it a star!
