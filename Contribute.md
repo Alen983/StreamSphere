@@ -1,6 +1,7 @@
 # Contributing to StreamSphere
 
 Thanks for your interest in contributing! ❤️
+
 If you Liked the Repo, Don't forget to Star it.⭐
 
 ## How to Contribute
