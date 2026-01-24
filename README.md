@@ -54,7 +54,7 @@ cd frontend
 npm install
 ```
 ## Contributions
-See [Contribute.md](Contribute.md) for contribution guidelines.
+See [Contributing.md](Contributing.md) for contribution guidelines.
 Thanks for your interest in contributing! ❤️
 
 ## Notes
