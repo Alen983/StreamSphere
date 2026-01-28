@@ -1,26 +1,26 @@
-import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { Box, Container, CircularProgress } from '@mui/material';
-import { useAuth } from '@/context/AuthContext';
-import api from '@/lib/api';
-import Footer from '@/components/Footer';
-import ProfileHeader from '@/components/profile/ProfileHeader';
-import AccountInformationPanel from '@/components/profile/AccountInformationPanel';
-import LogoutButton from '@/components/profile/LogoutButton';
-import FavoritesSection from '@/components/profile/FavoritesSection';
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { Box, Container, CircularProgress } from "@mui/material";
+import { useAuth } from "@/context/AuthContext";
+import api from "@/lib/api";
+import Footer from "@/components/Footer";
+import ProfileHeader from "@/components/profile/ProfileHeader";
+import AccountInformationPanel from "@/components/profile/AccountInformationPanel";
+import LogoutButton from "@/components/profile/LogoutButton";
+import FavoritesSection from "@/components/profile/FavoritesSection";
 
 export default function Profile() {
   const { isAuthenticated, loading: authLoading, logout } = useAuth();
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
-      router.push('/');
+      router.push("/");
     }
   }, [isAuthenticated, authLoading, router]);
 
@@ -28,11 +28,15 @@ export default function Profile() {
     const fetchUser = async () => {
       try {
         setLoading(true);
-        const response = await api.get('/api/v1/current/user');
-        setUser(response.data.user);
+        const response = await api.get("/api/v1/current/user");
+        const userData = response.data.user;
+        setUser(userData);
+        if (userData.preferences?.favoriteMedia) {
+          setFavorites(userData.preferences.favoriteMedia);
+        }
       } catch (error) {
-        console.error('Error fetching user:', error);
-        setError('Failed to load user profile');
+        console.error("Error fetching user:", error);
+        setError("Failed to load user profile");
       } finally {
         setLoading(false);
       }
@@ -48,22 +52,30 @@ export default function Profile() {
   // Refresh user data when page becomes visible (e.g., returning from subscription page)
   useEffect(() => {
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && isAuthenticated && !loading) {
+      if (
+        document.visibilityState === "visible" &&
+        isAuthenticated &&
+        !loading
+      ) {
         const fetchUser = async () => {
           try {
-            const response = await api.get('/api/v1/current/user');
-            setUser(response.data.user);
+            const response = await api.get("/api/v1/current/user");
+            const userData = response.data.user;
+            setUser(userData);
+            if (userData.preferences?.favoriteMedia) {
+              setFavorites(userData.preferences.favoriteMedia);
+            }
           } catch (error) {
-            console.error('Error refreshing user:', error);
+            console.error("Error refreshing user:", error);
           }
         };
         fetchUser();
       }
     };
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, [isAuthenticated, loading]);
 
@@ -73,8 +85,8 @@ export default function Profile() {
       // await api.put(`/api/v1/update/user/${user._id}`, updatedUser);
       setUser({ ...user, ...updatedUser });
     } catch (error) {
-      console.error('Error updating user:', error);
-      setError('Failed to update profile');
+      console.error("Error updating user:", error);
+      setError("Failed to update profile");
     }
   };
 
@@ -82,14 +94,14 @@ export default function Profile() {
     return (
       <Box
         sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#000',
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#000",
         }}
       >
-        <CircularProgress sx={{ color: '#ffd700' }} />
+        <CircularProgress sx={{ color: "#ffd700" }} />
       </Box>
     );
   }
@@ -107,29 +119,29 @@ export default function Profile() {
 
       <Box
         sx={{
-          minHeight: '100vh',
-          backgroundColor: '#000',
+          minHeight: "100vh",
+          backgroundColor: "#000",
           pt: { xs: 10, md: 12 },
           pb: 8,
-          position: 'relative',
+          position: "relative",
           backgroundImage: 'url("/hero_bg.jpg")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
-          '&::before': {
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+          "&::before": {
             content: '""',
-            position: 'absolute',
+            position: "absolute",
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
             zIndex: 0,
           },
         }}
       >
-        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+        <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>
           <ProfileHeader user={user} />
 
           <AccountInformationPanel user={user} onUpdate={handleUpdateUser} />
